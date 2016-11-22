@@ -7,7 +7,7 @@ class CameraRunner:
         # Giant Dataset Emotions:
         # self.emotions = ["anger", "disgust", "fear", "happy", "sad", "surprise", "neutral"]
         # Small Dataset Emotions:
-        self.emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
+        self.emotions = ["neutral", "anger", "happy", "sadness", "surprise"]  # Emotion list
         # self.emotions = ["anger", "happy", "sadness", "surprise", "neutral"]
         self.face_finder = cv2.CascadeClassifier("/Users/andrewsilva/opencv-3.1.0/data/haarcascades/haarcascade"
                                              "_frontalface_default.xml")

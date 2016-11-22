@@ -70,6 +70,8 @@ def flip_faces(emotion):
 		filenumber += 1
 
 
-for emotion in emotions:
-	detect_faces(emotion)  # Call function
-	# flip_faces(emotion)
+# for emotion in emotions:
+# 	detect_faces(emotion)  # Call function
+# 	# flip_faces(emotion)
+flip_faces('happy')
+flip_faces('sadness')

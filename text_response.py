@@ -115,7 +115,7 @@ class Chatbot:
 		elif self.last_topic == 'unknown':
 			phrase = 'Oh okay, thanks for repeating that \n'
 			phrase += self.last_phrase
-			self.last_phrase = phrase
+			# self.last_phrase = phrase
 			self.last_topic = 'starter'
 			return phrase
 		elif self.last_topic == 'GARETH':
@@ -161,6 +161,5 @@ class Chatbot:
 			phrase = "I'm feeling a bit tired. Thanks for the chat, I'll talk to you later!"
 			self.current_subject = 'goodbye'
 			self.last_topic = 'GARETH'
-			print(self.last_topic)
 		self.last_phrase = phrase
 		return phrase

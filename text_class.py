@@ -56,7 +56,7 @@ def classify_text(raw_input):
 			for batch in batch_data:
 				batch_pred = sess.run(predictions, {input_x: batch, dropout_keep_probability: 1.0})
 				predicted_classes = np.concatenate([predicted_classes, batch_pred])
-				print(predicted_classes)
+				# print(predicted_classes)
 			# pred = sess.run(predicted_classes, {input_x: x_test, dropout_keep_probability:1.0})
 			return predicted_classes
 

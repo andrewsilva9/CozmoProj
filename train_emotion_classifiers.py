@@ -4,7 +4,8 @@ import datetime
 import numpy as np
 import random
 
-emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]  # Emotion list
+# emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]  # Emotion list
+emotions = ["neutral", "anger", "happy", "sadness", "surprise"]  # Emotion list
 
 # emotions = ["anger", "happy", "sadness", "surprise", "neutral"]  # Emotion list
 fishface = cv2.face.createFisherFaceRecognizer()  # Initialize fisher face classifier
@@ -23,8 +24,8 @@ def get_files(emotion):  # Define function to get file list, randomly shuffle it
 	# training = files[:]
 	# prediction = files[-100:]
 	random.shuffle(files)
-	training = files[:int(len(files) * 0.8)]  # get first 80% of file list
-	prediction = files[-int(len(files) * 0.2):]  # get last 20% of file list
+	training = files[:int(len(files) * 1)]  # get first 80% of file list
+	prediction = files[-int(len(files) * 0):]  # get last 20% of file list
 	return training, prediction
 
 
@@ -62,11 +63,12 @@ def run_recognizer(num_run=0):
 	print("{}: Training Fisher face classifier".format(time_str))
 	print("{}: size of training set is: {} images".format(time_str, len(training_data)))
 	fishface.train(training_data, np.asarray(training_labels))
-	fishface.save('fish_models/fish_model' + str(num_run) + '.xml')
+	# fishface.save('fish_models/fish_model' + str(num_run) + '.xml')
+	fishface.save('new_model2.xml')
 	time_str = datetime.datetime.now().isoformat()
 	print("{}: Predicting test set".format(time_str))
 	cnt = 0
-	correct = 0
+	correct = 1
 	incorrect = 0
 	for image in prediction_data:
 		pred, conf = fishface.predict(image)
@@ -80,11 +82,14 @@ def run_recognizer(num_run=0):
 
 
 # Now run it
-metascore = []
-for i in range(0, 10):
-	correct = run_recognizer(num_run=i)
-	time_str = datetime.datetime.now().isoformat()
-	print("{}: Run {}: {:.4f} percent correct".format(time_str, i, correct))
-	metascore.append(correct)
+correct = run_recognizer()
 time_str = datetime.datetime.now().isoformat()
-print("{}: Final score: {:.4f} percent correct".format(time_str, np.mean(metascore)))
+print("{}: {:.4f} percent correct".format(time_str, correct))
+# metascore = []
+# for i in range(0, 10):
+# 	correct = run_recognizer(num_run=i)
+# 	time_str = datetime.datetime.now().isoformat()
+# 	print("{}: Run {}: {:.4f} percent correct".format(time_str, i, correct))
+# 	metascore.append(correct)
+# time_str = datetime.datetime.now().isoformat()
+# print("{}: Final score: {:.4f} percent correct".format(time_str, np.mean(metascore)))
