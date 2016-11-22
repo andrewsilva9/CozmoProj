@@ -1,0 +1,16 @@
+
+*.pyc
+
+*.iml
+
+*.jpg
+
+cozmo_examples/*
+
+old_stuff/*
+
+*.png
+
+fish_modelsOLD/*
+
+.idea/*

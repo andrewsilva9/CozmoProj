@@ -1,0 +1,6 @@
+model_checkpoint_path: "/Users/andrewsilva/PycharmProjects/cnn-text-classification-tf/runs/1478835326/checkpoints/model-30000"
+all_model_checkpoint_paths: "/Users/andrewsilva/PycharmProjects/cnn-text-classification-tf/runs/1478835326/checkpoints/model-29600"
+all_model_checkpoint_paths: "/Users/andrewsilva/PycharmProjects/cnn-text-classification-tf/runs/1478835326/checkpoints/model-29700"
+all_model_checkpoint_paths: "/Users/andrewsilva/PycharmProjects/cnn-text-classification-tf/runs/1478835326/checkpoints/model-29800"
+all_model_checkpoint_paths: "/Users/andrewsilva/PycharmProjects/cnn-text-classification-tf/runs/1478835326/checkpoints/model-29900"
+all_model_checkpoint_paths: "/Users/andrewsilva/PycharmProjects/cnn-text-classification-tf/runs/1478835326/checkpoints/model-30000"
