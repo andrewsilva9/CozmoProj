@@ -4,7 +4,12 @@ import text_response
 import webcam_recognizer as wcr
 import emotions
 import pandas as pd
+import time
 import matplotlib.pyplot as plt
+import cozmo
+# Warning Suppression
+import warnings
+warnings.filterwarnings("ignore")
 
 my_runner = wcr.CameraRunner()
 bot = text_response.Chatbot()
@@ -13,39 +18,64 @@ emo_df = pd.DataFrame(emot.emotions, index=[0])
 rec = sr.Recognizer()
 sentiment = ["negative", "positive"]
 print(bot.get_started())
-my_runner.run(emot)
+bot_response = ''
+cozmo_has_response = False
+last_spoke = time.time()
+mic = sr.Microphone()
+with mic as source:
+	rec.adjust_for_ambient_noise(mic)
 
-## I need to get expressions and transcription going in parallel
-# DO like a while True: expression stuff constantly and have a variable and if it's true, go down the necessary bit of langauge processing
-while True:
-	print("I'm listening...")
-	with sr.Microphone() as source:
-		audio = rec.listen(source=source)
 
+def run(sdk_conn):
+	'''The run method runs once Cozmo is connected.'''
+	robot = sdk_conn.wait_for_robot()
+
+	def process_audio(recognizer, audio):
+		try:
+			transcription = rec.recognize_google(audio)
+		except sr.UnknownValueError:
+			# API failed
+			transcription = ""
+		except sr.RequestError as e:
+			# Request to API failed
+			transcription = ""
+		# print('Transcription', transcription)
+		global bot_response
+		bot_response = bot.respond_to(transcription)
+		global cozmo_has_response
+		cozmo_has_response = True
+		# print('response: ', bot_response)
+		sentiment_val = int(text_class.classify_text([transcription])[0])
+		emot.add_speech_sentiment(sentiment[sentiment_val])
+
+	stop_listening = rec.listen_in_background(mic, process_audio)
+	# Use start_time to get a set amount of time for the conversation (only a set amount will let me plot emotions)
+	# start_time = time.time()
+
+	while True:
+		expression = my_runner.run()
+		emot.add_expression(expression)
+		# Give user 10 seconds to speak (should be upped probably)
+		if time.time() - last_spoke > 10:
+			last_spoke = time.time()
+			print('Cozmo is thinking...')
+			stop_listening()
+			if cozmo_has_response:
+				print(bot_response)
+				cozmo_has_response = False
+				stop_listening = rec.listen_in_background(mic, process_audio)
+
+		emo_df = emo_df.append(emot.emotions, ignore_index=True)
+		bot.user_feeling = emot.active_emotion
+
+	styles = ['rs-', 'go-', 'b^-', 'ro-', 'y^-']
+	plotter = emo_df.plot(title="Current Emotions", style=styles)
+	plt.show()
+
+
+if __name__ == '__main__':
+	cozmo.setup_basic_logging()
 	try:
-		transcription = rec.recognize_google(audio)
-	except sr.UnknownValueError:
-		# API failed
-		transcription = ""
-	except sr.RequestError as e:
-		# Request to API failed
-		transcription = ""
-	# expression = my_runner.run()
-
-	# transcription = input("> ")
-	response = bot.respond_to(transcription)
-	sentiment_val = int(text_class.classify_text([transcription])[0])
-	# emot.add_expression(expression)
-	emot.add_speech_sentiment(sentiment[sentiment_val])
-	emo_df = emo_df.append(emot.emotions, ignore_index=True)
-	if transcription == 'quit':
-		break
-	print("Input: ", transcription)
-	print("Sentiment: ", sentiment[sentiment_val])
-	print("Response: ", response)
-	print("Cozmo is feeling: ", emot.active_emotion)
-	bot.user_feeling = emot.active_emotion
-	print(emo_df.iloc[-1])
-	# plotter = emo_df.plot(title="Current Emotions")
-	# plt.pause(0.05)
-
+		cozmo.connect(run)
+	except cozmo.ConnectionError as e:
+		sys.exit("A connection error occurred: %s" % e)

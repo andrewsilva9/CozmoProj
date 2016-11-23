@@ -64,7 +64,7 @@ def run_recognizer(num_run=0):
 	print("{}: size of training set is: {} images".format(time_str, len(training_data)))
 	fishface.train(training_data, np.asarray(training_labels))
 	# fishface.save('fish_models/fish_model' + str(num_run) + '.xml')
-	fishface.save('new_model2.xml')
+	fishface.save('new_model3.xml')
 	time_str = datetime.datetime.now().isoformat()
 	print("{}: Predicting test set".format(time_str))
 	cnt = 0

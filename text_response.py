@@ -15,6 +15,7 @@ class Chatbot:
 		else:
 			self.day_part = 'evening'
 		self.last_topic = None
+		self.before_unknown = None
 		self.current_subject = None
 		self.user_feeling = None
 		self.last_phrase = None
@@ -60,6 +61,7 @@ class Chatbot:
 		words = input_text.split()
 		# no input or failed mic reading
 		if len(words) == 0:
+			self.before_unknown = self.last_topic
 			self.last_topic = 'unknown'
 			return self.unknown[random.randint(0, len(self.unknown) - 1)]
 		# Not finished with introductions, follow that path
@@ -114,9 +116,13 @@ class Chatbot:
 			return phrase
 		elif self.last_topic == 'unknown':
 			phrase = 'Oh okay, thanks for repeating that \n'
-			phrase += self.last_phrase
 			# self.last_phrase = phrase
-			self.last_topic = 'starter'
+			self.last_topic = self.before_unknown
+			if self.last_topic == 'unknown':
+				self.last_topic = 'starter'
+				return phrase
+			else:
+				phrase += self.respond_to(input_text)
 			return phrase
 		elif self.last_topic == 'GARETH':
 			return 'Cozmo is fast asleep...'

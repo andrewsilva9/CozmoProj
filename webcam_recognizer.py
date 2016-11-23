@@ -48,7 +48,7 @@ class CameraRunner:
         elif len(face4) == 1:
             face = face4[0]
         else:
-            return 'neutral'
+            return ''
         # Cut and save face
         # scale image
         gray = gray[face[1]:face[1] + face[3],

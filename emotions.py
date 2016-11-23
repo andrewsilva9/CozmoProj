@@ -7,6 +7,10 @@ class EmotionCenter:
 		self.last_emotions = []
 
 	def add_expression(self, input_string):
+		if input_string is 'neutral':
+			self.emotions['neutral'] += 0.2
+			self.reevaluate()
+			return
 		if input_string in self.emotions:
 			if input_string in self.last_emotions:
 				self.emotions[input_string] += 0.5
