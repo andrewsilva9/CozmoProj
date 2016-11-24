@@ -2,7 +2,7 @@ class EmotionCenter:
 	def __init__(self):
 		self.emotion_decay_rate = 0.95
 		self.emotion_spike_factor = 5
-		self.emotions = {'happy': 0.0, 'sadness': 0.0, 'neutral': 1.0, 'anger': 0.0, 'surprise': 0.0}
+		self.emotions = {'happy': 0.0, 'sadness': 0.0, 'neutral': 1.0, 'anger': 0.0}
 		self.active_emotion = 'neutral'
 		self.last_emotions = []
 

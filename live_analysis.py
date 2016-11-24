@@ -7,23 +7,11 @@ import pandas as pd
 import time
 import matplotlib.pyplot as plt
 import cozmo
+import sys
 # Warning Suppression
 import warnings
 warnings.filterwarnings("ignore")
 
-my_runner = wcr.CameraRunner()
-bot = text_response.Chatbot()
-emot = emotions.EmotionCenter()
-emo_df = pd.DataFrame(emot.emotions, index=[0])
-rec = sr.Recognizer()
-sentiment = ["negative", "positive"]
-print(bot.get_started())
-bot_response = ''
-cozmo_has_response = False
-last_spoke = time.time()
-mic = sr.Microphone()
-with mic as source:
-	rec.adjust_for_ambient_noise(mic)
 
 
 def run(sdk_conn):
@@ -48,20 +36,53 @@ def run(sdk_conn):
 		sentiment_val = int(text_class.classify_text([transcription])[0])
 		emot.add_speech_sentiment(sentiment[sentiment_val])
 
+	my_runner = wcr.CameraRunner()
+	bot = text_response.Chatbot()
+	emot = emotions.EmotionCenter()
+	emo_df = pd.DataFrame(emot.emotions, index=[0])
+	rec = sr.Recognizer()
+	sentiment = ["negative", "positive"]
+	print(bot.get_started())
+	bot_response = ''
+	cozmo_has_response = False
+	last_spoke = time.time()
+	mic = sr.Microphone()
+	with mic as source:
+		rec.adjust_for_ambient_noise(mic)
+
 	stop_listening = rec.listen_in_background(mic, process_audio)
 	# Use start_time to get a set amount of time for the conversation (only a set amount will let me plot emotions)
 	# start_time = time.time()
-
+	current_emotion = emot.active_emotion
 	while True:
 		expression = my_runner.run()
 		emot.add_expression(expression)
-		# Give user 10 seconds to speak (should be upped probably)
+		if emot.active_emotion != current_emotion:
+			current_emotion = emot.active_emotion
+			# if emot.active_emotion == 'neutral':
+			# robot.play_anim_trigger(neutrality).wait_for_completed()
+			# elif emot.active_emotion == 'happy':
+			# robot.play_anim_trigger(happiness).wait_for_completed()
+			# elif emot.active_emotion == 'sadness':
+			# robot.play_anim_trigger(sadness).wait_for_completed()
+			# elif emot.active_emotion == 'angry':
+			# robot.play_anim_trigger(anger).wait_for_completed()
 		if time.time() - last_spoke > 10:
 			last_spoke = time.time()
 			print('Cozmo is thinking...')
 			stop_listening()
 			if cozmo_has_response:
 				print(bot_response)
+				robot.say_text(bot_response).wait_for_completed()
+				active_emotion = emot.active_emotion
+				# if emot.active_emotion == 'neutral':
+					# robot.play_anim_trigger(neutrality).wait_for_completed()
+				# elif emot.active_emotion == 'happy':
+					# robot.play_anim_trigger(happiness).wait_for_completed()
+				# elif emot.active_emotion == 'sadness':
+					# robot.play_anim_trigger(sadness).wait_for_completed()
+				# elif emot.active_emotion == 'angry':
+					# robot.play_anim_trigger(anger).wait_for_completed()
 				cozmo_has_response = False
 				stop_listening = rec.listen_in_background(mic, process_audio)
 
