@@ -21,7 +21,7 @@ class EmotionClassifier:
 		# 	self.models.append(model_temp)
 		model_temp = cv2.face.createFisherFaceRecognizer()
 		model_temp.load('new_model3.xml')
-		self.models = [model_temp]
+		# self.models = [model_temp]
 		model_temp = cv2.face.createFisherFaceRecognizer()
 		model_temp.load('new_model.xml')
 		self.models.append(model_temp)

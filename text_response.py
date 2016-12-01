@@ -71,7 +71,12 @@ class Chatbot:
 			if self.last_topic == 'greeting' or self.last_topic == 'unknown' and self.user_name is None:
 				# if they said : hi my name is andrew, get andrew out and move on
 				if 'name' in words:
-					self.user_name = words[words.index('name') + 2]
+					if (words.index('name')+2) < len(words):
+						self.user_name = words[words.index('name') + 2]
+					elif (words.index('name') + 1) < len(words):
+						self.user_name = words[words.index('name') + 1]
+					else:
+						self.user_name = ''
 					self.last_topic = 'starter'
 					phrase = 'Hi {}! \n'.format(self.user_name)
 					self.introduced = True
@@ -85,7 +90,12 @@ class Chatbot:
 			if self.last_topic == 'name':
 				self.introduced = True
 				if 'name' in words:
-					self.user_name = words[words.index('name') + 2]
+					if (words.index('name')+2) < len(words):
+						self.user_name = words[words.index('name') + 2]
+					elif (words.index('name') + 1) < len(words):
+						self.user_name = words[words.index('name') + 1]
+					else:
+						self.user_name = ''
 					phrase = 'Hi {}! \n'.format(self.user_name)
 				else:
 					self.user_name = words[0]
